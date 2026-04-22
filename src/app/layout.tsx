@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
 import AuthProvider from "../components/AuthProvider";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,15 +17,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className={`${inter.className} min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AuthProvider>
-            <Navbar />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
+            {children}
           </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
   );
 }
-// VIP Update 2026

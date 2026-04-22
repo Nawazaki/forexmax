@@ -1,5 +1,5 @@
 import prisma from "../../../../lib/prisma";
-import { updateStrategy } from "../../../../actions/strategies";
+import { updateStrategy } from "../../../actions/strategies";
 import { notFound } from "next/navigation";
 
 export default async function EditStrategyPage({ params }: { params: Promise<{ id: string }> }) {

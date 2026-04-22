@@ -1,4 +1,4 @@
-import prisma from "../../lib/prisma";
+import prisma from "../../../lib/prisma";
 import Image from "next/image";
 import { ShieldCheck, ExternalLink, Building2, Star, ArrowRight } from "lucide-react";
 
