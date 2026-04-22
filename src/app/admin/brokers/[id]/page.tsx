@@ -1,5 +1,5 @@
 import prisma from "../../../../lib/prisma";
-import { updateBroker } from "../../../../actions/brokers";
+import { updateBroker } from "../../../actions/brokers";
 import { notFound } from "next/navigation";
 import { Building2, Link as LinkIcon, Globe } from "lucide-react";
 

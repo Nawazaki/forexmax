@@ -1,4 +1,4 @@
-import { createArticle } from "../../../../actions/articles";
+import { createArticle } from "../../../actions/articles";
 
 export default function NewArticlePage() {
   return (

@@ -1,7 +1,7 @@
 import prisma from "../../../lib/prisma";
 import Link from "next/link";
 import { Plus, Edit, Trash2 } from "lucide-react";
-import { deleteStrategy } from "../../../actions/strategies";
+import { deleteStrategy } from "../../actions/strategies";
 
 export default async function AdminStrategiesPage() {
   const strategies = await prisma.strategy.findMany({

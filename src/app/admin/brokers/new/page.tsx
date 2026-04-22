@@ -1,4 +1,4 @@
-import { createBroker } from "../../../../actions/brokers";
+import { createBroker } from "../../../actions/brokers";
 import { Building2, Link as LinkIcon, Globe } from "lucide-react";
 
 export default function NewBrokerPage() {

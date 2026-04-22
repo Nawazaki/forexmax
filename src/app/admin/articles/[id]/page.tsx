@@ -1,5 +1,5 @@
 import prisma from "../../../../lib/prisma";
-import { updateArticle } from "../../../../actions/articles";
+import { updateArticle } from "../../../actions/articles";
 import { notFound } from "next/navigation";
 
 export default async function EditArticlePage({ params }: { params: Promise<{ id: string }> }) {

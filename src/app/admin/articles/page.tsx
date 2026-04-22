@@ -1,7 +1,7 @@
 import prisma from "../../../lib/prisma";
 import Link from "next/link";
 import { Plus, Edit, Trash2 } from "lucide-react";
-import { deleteArticle } from "../../../actions/articles";
+import { deleteArticle } from "../../actions/articles";
 
 export default async function AdminArticlesPage() {
   const articles = await prisma.article.findMany({

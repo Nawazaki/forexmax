@@ -1,6 +1,6 @@
 import prisma from "../../../lib/prisma";
 import { MessageSquare, Trash2, User as UserIcon, AlertCircle } from "lucide-react";
-import { deleteTopic } from "../../../actions/forum";
+import { deleteTopic } from "../../actions/forum";
 
 export default async function AdminForumPage() {
   const topics = await prisma.forumTopic.findMany({ 
