@@ -2,7 +2,7 @@ import prisma from "../../../lib/prisma";
 import Link from "next/link";
 import Image from "next/image";
 import { Plus, Edit, Trash2, Building2, ExternalLink } from "lucide-react";
-import { deleteBroker } from "../../../actions/brokers";
+import { deleteBroker } from "../../actions/brokers";
 
 export default async function AdminBrokersPage() {
   const brokers = await prisma.broker.findMany({ orderBy: { createdAt: "desc" } });

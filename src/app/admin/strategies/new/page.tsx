@@ -1,4 +1,4 @@
-import { createStrategy } from "../../../../actions/strategies";
+import { createStrategy } from "../../../actions/strategies";
 
 export default function NewStrategyPage() {
   return (

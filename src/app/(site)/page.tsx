@@ -1,30 +1,27 @@
 import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight, ShieldCheck, TrendingUp, Users, BookOpen, FileText, Calendar, Building2, ExternalLink, Star, Sparkles } from "lucide-react";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
-import prisma from "../lib/prisma";
+import { ArrowRight, TrendingUp, BookOpen, FileText, Building2, Star, Sparkles, ShieldCheck, Users } from "lucide-react";
+import { Suspense } from "react";
+import { TopBrokers } from "../../components/TopBrokers";
+import { LatestStrategies } from "../../components/LatestStrategies";
+import { LatestArticles } from "../../components/LatestArticles";
+
+function LoadingCard() {
+  return (
+    <div className="bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl rounded-[2rem] border border-zinc-200/50 dark:border-zinc-800/50 h-80 animate-pulse"></div>
+  );
+}
+
+function SectionSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <LoadingCard />
+      <LoadingCard />
+      <LoadingCard />
+    </div>
+  );
+}
 
 export default async function HomePage() {
-  const session = await getServerSession(authOptions);
-
-  const topBrokers = await prisma.broker.findMany({
-    take: 3,
-    orderBy: { createdAt: "desc" },
-  });
-
-  const latestStrategies = await prisma.strategy.findMany({
-    take: 3,
-    orderBy: { createdAt: "desc" },
-    include: { author: true },
-  });
-
-  const latestArticles = await prisma.article.findMany({
-    take: 3,
-    orderBy: { createdAt: "desc" },
-    include: { author: true },
-  });
-
   return (
     <div className="flex flex-col min-h-screen font-sans selection:bg-purple-500/30 relative bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
       
@@ -89,38 +86,9 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {topBrokers.map((broker) => (
-                <div key={broker.id} className="group flex flex-col bg-white/60 dark:bg-zinc-900/60 backdrop-blur-2xl rounded-[2rem] shadow-xl hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 border border-white/50 dark:border-zinc-700/50 overflow-hidden hover:-translate-y-2 hover:border-emerald-500/50">
-                  <div className="relative h-52 w-full bg-gradient-to-br from-white/40 to-white/10 dark:from-zinc-800/40 dark:to-zinc-900/40 overflow-hidden border-b border-zinc-200/50 dark:border-zinc-800/50 flex items-center justify-center">
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/40 dark:from-white/5 via-transparent to-transparent transition-all duration-700"></div>
-                    <div className="relative w-[70%] h-[70%] flex items-center justify-center bg-white dark:bg-zinc-950 rounded-2xl shadow-lg border border-zinc-100 dark:border-zinc-800 p-4 z-10 group-hover:scale-105 transition-transform duration-500">
-                      {broker.logoUrl ? (
-                        <Image src={broker.logoUrl} alt={`${broker.name} Logo`} fill className="object-contain p-4" />
-                      ) : (
-                        <Building2 className="h-16 w-16 text-zinc-300 dark:text-zinc-700" />
-                      )}
-                    </div>
-                  </div>
-                  <div className="p-8 flex flex-col flex-grow relative">
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-2xl font-black text-zinc-900 dark:text-white">{broker.name}</h3>
-                      <div className="flex items-center bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border border-emerald-500/20">
-                        <ShieldCheck className="h-3.5 w-3.5 mr-1" /> Verified
-                      </div>
-                    </div>
-                    <a href={broker.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 mb-8 flex items-center transition-colors">
-                      Official Website <ExternalLink className="h-3.5 w-3.5 ml-1.5" />
-                    </a>
-                    <div className="mt-auto pt-6 border-t border-zinc-200/50 dark:border-zinc-800/50">
-                      <a href={broker.affiliateLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold py-4 rounded-xl hover:bg-gradient-to-r hover:from-emerald-500 hover:to-emerald-600 hover:text-white transition-all duration-300 shadow-md group-hover/btn:shadow-xl group/btn">
-                        Open Account <ArrowRight className="h-5 w-5 ml-2 group-hover/btn:translate-x-1 transition-transform" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <Suspense fallback={<SectionSkeleton />}>
+              <TopBrokers />
+            </Suspense>
           </div>
         </section>
 
@@ -142,39 +110,9 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {latestStrategies.map((strategy) => (
-                <Link href={`/strategies/${strategy.id}`} key={strategy.id} className="group block h-full">
-                  <div className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-2xl rounded-[2rem] shadow-xl hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-500 border border-white/50 dark:border-zinc-700/50 overflow-hidden hover:-translate-y-2 hover:border-amber-500/50 h-full flex flex-col">
-                    <div className="relative h-60 w-full bg-gradient-to-br from-white/40 to-white/10 dark:from-zinc-800/40 dark:to-zinc-900/40 overflow-hidden border-b border-zinc-200/50 dark:border-zinc-800/50">
-                      {strategy.imageUrl ? (
-                        <Image src={strategy.imageUrl} alt={strategy.title} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <BookOpen className="h-14 w-14 text-amber-500/50 dark:text-amber-500/30 group-hover:scale-110 transition-transform duration-500" />
-                        </div>
-                      )}
-                      <div className="absolute top-5 left-5">
-                        <span className="px-4 py-2 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md text-amber-600 dark:text-amber-400 text-xs font-black rounded-xl shadow-lg border border-amber-500/20 uppercase tracking-widest">
-                          {strategy.difficulty}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="p-8 flex flex-col flex-grow">
-                      <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-4 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors leading-snug">
-                        {strategy.title}
-                      </h3>
-                      <p className="text-zinc-600 dark:text-zinc-400 line-clamp-3 mb-8 leading-relaxed font-medium">
-                        {strategy.content}
-                      </p>
-                      <div className="mt-auto flex items-center text-sm font-black uppercase tracking-widest text-amber-600 dark:text-amber-400">
-                        Read Strategy <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-2 transition-transform" />
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <Suspense fallback={<SectionSkeleton />}>
+              <LatestStrategies />
+            </Suspense>
           </div>
         </section>
 
@@ -196,42 +134,9 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {latestArticles.map((article) => (
-                <Link href={`/articles/${article.id}`} key={article.id} className="group block h-full">
-                  <div className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-2xl rounded-[2rem] shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 border border-white/50 dark:border-zinc-700/50 overflow-hidden hover:-translate-y-2 hover:border-purple-500/50 h-full flex flex-col">
-                    <div className="relative h-60 w-full bg-gradient-to-br from-white/40 to-white/10 dark:from-zinc-800/40 dark:to-zinc-900/40 overflow-hidden border-b border-zinc-200/50 dark:border-zinc-800/50">
-                      {article.imageUrl ? (
-                        <Image src={article.imageUrl} alt={article.title} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <FileText className="h-14 w-14 text-purple-500/50 dark:text-purple-500/30 group-hover:scale-110 transition-transform duration-500" />
-                        </div>
-                      )}
-                      <div className="absolute top-5 left-5">
-                        <span className="px-4 py-2 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md text-purple-600 dark:text-purple-400 text-xs font-black rounded-xl shadow-lg border border-purple-500/20 uppercase tracking-widest">
-                          {article.category}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="p-8 flex flex-col flex-grow">
-                      <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-6 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors leading-snug">
-                        {article.title}
-                      </h3>
-                      <div className="mt-auto flex items-center justify-between border-t border-zinc-200/50 dark:border-zinc-800/50 pt-6">
-                        <div className="flex items-center gap-2 text-sm font-bold text-zinc-500 dark:text-zinc-400">
-                          <Calendar className="h-4 w-4" />
-                          <span>{new Date(article.createdAt).toLocaleDateString()}</span>
-                        </div>
-                        <div className="text-purple-600 dark:text-purple-400 bg-purple-500/10 p-3 rounded-xl group-hover:bg-purple-600 group-hover:text-white transition-all shadow-sm group-hover:shadow-md">
-                          <ArrowRight className="h-5 w-5" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <Suspense fallback={<SectionSkeleton />}>
+              <LatestArticles />
+            </Suspense>
           </div>
         </section>
 
@@ -243,7 +148,6 @@ export default async function HomePage() {
               <p className="text-zinc-700 dark:text-zinc-300 text-xl font-medium max-w-2xl mx-auto">Everything you need to elevate your trading journey, packed in one elite platform.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              
               {/* Feature 1 */}
               <div className="p-10 rounded-[2.5rem] bg-white/60 dark:bg-zinc-900/60 backdrop-blur-2xl border border-white/50 dark:border-zinc-700/50 shadow-xl hover:shadow-2xl hover:shadow-amber-500/20 hover:-translate-y-2 hover:border-amber-500/50 transition-all duration-500 text-center group">
                 <div className="h-24 w-24 rounded-[2rem] bg-amber-500/10 flex items-center justify-center mx-auto mb-8 shadow-inner border border-amber-500/20 group-hover:scale-110 transition-transform duration-500">
@@ -269,14 +173,13 @@ export default async function HomePage() {
               {/* Feature 3 */}
               <div className="p-10 rounded-[2.5rem] bg-white/60 dark:bg-zinc-900/60 backdrop-blur-2xl border border-white/50 dark:border-zinc-700/50 shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-2 hover:border-purple-500/50 transition-all duration-500 text-center group">
                 <div className="h-24 w-24 rounded-[2rem] bg-purple-500/10 flex items-center justify-center mx-auto mb-8 shadow-inner border border-purple-500/20 group-hover:scale-110 transition-transform duration-500">
-                  <Users className="h-12 w-12 text-purple-600 dark:text-purple-400" />
+                  <BookOpen className="h-12 w-12 text-purple-600 dark:text-purple-400" />
                 </div>
                 <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-4">Active Forum</h3>
                 <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-lg font-medium">
                   Engage with thousands of traders, share your chart analysis, and learn from the community's collective wisdom.
                 </p>
               </div>
-
             </div>
           </div>
         </section>

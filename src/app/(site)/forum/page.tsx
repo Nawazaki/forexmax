@@ -1,6 +1,6 @@
-import prisma from "../../lib/prisma";
+import prisma from "../../../lib/prisma";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "../../../lib/auth";
 import { MessageSquare, Calendar, Lock, MessageCircle, ArrowRight } from "lucide-react";
 import { createTopic } from "../../actions/forum";
 import Link from "next/link";

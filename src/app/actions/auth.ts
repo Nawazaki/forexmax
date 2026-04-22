@@ -1,5 +1,6 @@
 "use server";
-import prisma from "../lib/prisma";
+
+import prisma from "../../lib/prisma";
 import bcrypt from "bcryptjs";
 
 export async function registerUser(formData: FormData) {
@@ -41,6 +42,7 @@ export async function registerUser(formData: FormData) {
 
     return { success: true };
   } catch (error) {
+    console.error("Registration error:", error);
     return { error: "Something went wrong during registration." };
   }
 }
