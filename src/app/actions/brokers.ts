@@ -10,18 +10,15 @@ import { redirect } from "next/navigation";
 async function handleFileUpload(file: File | null): Promise<string | null> {
   try {
     if (!file || file.size === 0) {
-      console.log("No file detected in the form.");
       return null;
     }
     
-    console.log("File found! Starting upload to Vercel Blob:", file.name);
     const filename = `${Date.now()}-${file.name.replace(/\s/g, '-')}`;
     
     const blob = await put(`brokers/${filename}`, file, {
       access: 'public',
     });
     
-    console.log("Upload Success! Image URL:", blob.url);
     return blob.url;
   } catch (error) {
     console.error("Vercel Blob upload error:", error);
@@ -48,7 +45,6 @@ export async function createBroker(formData: FormData): Promise<void> {
     await prisma.broker.create({
       data: { name, websiteUrl, affiliateLink, logoUrl },
     });
-    console.log("Broker saved to DB successfully!");
   } catch (error) {
     console.error("Create broker error:", error);
     return;
@@ -81,11 +77,9 @@ export async function updateBroker(formData: FormData): Promise<void> {
     const logoUrl = await handleFileUpload(file);
     if (logoUrl) {
       dataToUpdate.logoUrl = logoUrl;
-      console.log("New logo will be saved to DB:", logoUrl);
     }
 
     await prisma.broker.update({ where: { id }, data: dataToUpdate });
-    console.log("Broker updated in DB successfully!");
   } catch (error) {
     console.error("Update broker error:", error);
     return;

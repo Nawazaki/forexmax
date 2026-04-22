@@ -5,7 +5,7 @@ export default function NewBrokerPage() {
   return (
     <div className="max-w-2xl mx-auto p-6">
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Add New Broker</h1>
-      <form action={createBroker} className="space-y-6 bg-white dark:bg-zinc-900 p-8 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+      <form action={createBroker} encType="multipart/form-data" className="space-y-6 bg-white dark:bg-zinc-900 p-8 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
         <div>
           <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">Broker Name</label>
           <div className="relative">
