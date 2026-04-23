@@ -3,23 +3,21 @@
 import prisma from "../../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-// دالة الرفع المحلية (نفس الموجودة في المقالات تماماً)
+// دالة الرفع السحابية لـ Vercel Blob
 async function handleFileUpload(file: File | null): Promise<string | null> {
   try {
     if (!file || file.size === 0) return null;
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const filename = `${Date.now()}-${file.name.replace(/\s/g, '-')}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(uploadDir, { recursive: true });
-    await writeFile(path.join(uploadDir, filename), buffer);
-    return `/uploads/${filename}`;
+    const blob = await put(`brokers/${file.name}`, file, {
+      access: 'public',
+      addRandomSuffix: true, // يضيف حروف عشوائية لتجنب تكرار الأسماء
+    });
+    return blob.url;
   } catch (error) {
-    console.error("File upload error:", error);
+    console.error("Vercel Blob upload error:", error);
     return null;
   }
 }
