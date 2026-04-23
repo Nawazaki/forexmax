@@ -1,38 +1,36 @@
-import { createBroker } from "../../../actions/brokers";
-import { Building2, Link as LinkIcon, Globe } from "lucide-react";
+import { createBroker } from "@/app/actions/brokers";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export default function NewBrokerPage() {
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Add New Broker</h1>
-      {/* التعديل الجوهري هنا 👇 */}
-      <form action={createBroker} encType="multipart/form-data" className="space-y-6 bg-white dark:bg-zinc-900 p-8 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-        <div>
-          <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">Broker Name</label>
-          <div className="relative">
-            <Building2 className="absolute left-3 top-3 h-5 w-5 text-zinc-400" />
-            <input type="text" name="name" required className="w-full pl-10 pr-4 py-2 border rounded-lg dark:bg-zinc-950 dark:border-zinc-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="e.g. IC Markets" />
+    <div className="p-6 max-w-2xl mx-auto">
+      <Link href="/admin/brokers" className="flex items-center gap-2 text-slate-500 hover:text-slate-800 mb-6 transition-colors">
+        <ArrowLeft size={18} /> Back to Brokers
+      </Link>
+      
+      <h1 className="text-2xl font-bold text-slate-900 mb-6">Add New Broker</h1>
+      
+      <form action={createBroker} encType="multipart/form-data" className="space-y-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <div className="grid grid-cols-1 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Broker Name</label>
+            <input name="name" required type="text" className="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-indigo-500 outline-none" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Website URL</label>
+            <input name="websiteUrl" required type="url" className="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-indigo-500 outline-none" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Affiliate Link</label>
+            <input name="affiliateLink" required type="url" className="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-indigo-500 outline-none" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Logo Image</label>
+            <input name="logo" type="file" accept="image/*" required className="w-full p-1 text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
           </div>
         </div>
-        <div>
-          <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">Website URL</label>
-          <div className="relative">
-            <Globe className="absolute left-3 top-3 h-5 w-5 text-zinc-400" />
-            <input type="url" name="websiteUrl" required className="w-full pl-10 pr-4 py-2 border rounded-lg dark:bg-zinc-950 dark:border-zinc-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="https://..." />
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">Affiliate Link</label>
-          <div className="relative">
-            <LinkIcon className="absolute left-3 top-3 h-5 w-5 text-zinc-400" />
-            <input type="url" name="affiliateLink" required className="w-full pl-10 pr-4 py-2 border rounded-lg dark:bg-zinc-950 dark:border-zinc-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="Your tracking link..." />
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">Broker Logo</label>
-          <input type="file" name="logo" accept="image/*" className="w-full p-2 border rounded-lg dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-400" />
-        </div>
-        <button type="submit" className="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-md">
+        <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-colors mt-4">
           Save Broker
         </button>
       </form>
