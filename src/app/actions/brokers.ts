@@ -3,28 +3,23 @@
 import prisma from "../../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
-import { put } from "@vercel/blob";
+import { writeFile, mkdir } from "fs/promises";
+import path from "path";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+// دالة الرفع المحلية (نفس الموجودة في المقالات تماماً)
 async function handleFileUpload(file: File | null): Promise<string | null> {
   try {
-    if (!file || file.size === 0) {
-      console.log("No file detected in the form.");
-      return null;
-    }
-    
-    console.log("File found! Starting upload to Vercel Blob:", file.name);
+    if (!file || file.size === 0) return null;
+    const buffer = Buffer.from(await file.arrayBuffer());
     const filename = `${Date.now()}-${file.name.replace(/\s/g, '-')}`;
-    
-    const blob = await put(`brokers/${filename}`, file, {
-      access: 'public',
-    });
-    
-    console.log("Upload Success! Image URL:", blob.url);
-    return blob.url;
+    const uploadDir = path.join(process.cwd(), "public", "uploads");
+    await mkdir(uploadDir, { recursive: true });
+    await writeFile(path.join(uploadDir, filename), buffer);
+    return `/uploads/${filename}`;
   } catch (error) {
-    console.error("Vercel Blob upload error:", error);
+    console.error("File upload error:", error);
     return null;
   }
 }
@@ -38,17 +33,13 @@ export async function createBroker(formData: FormData): Promise<void> {
   const affiliateLink = (formData.get("affiliateLink") as string) || "";
   const file = formData.get("logo") as File | null;
 
-  if (!name) {
-    console.log("Creation failed: Name is missing");
-    return;
-  }
+  if (!name) return;
 
   try {
     const logoUrl = await handleFileUpload(file);
     await prisma.broker.create({
       data: { name, websiteUrl, affiliateLink, logoUrl },
     });
-    console.log("Broker saved to DB successfully!");
   } catch (error) {
     console.error("Create broker error:", error);
     return;
@@ -70,10 +61,7 @@ export async function updateBroker(formData: FormData): Promise<void> {
   const affiliateLink = (formData.get("affiliateLink") as string) || "";
   const file = formData.get("logo") as File | null;
 
-  if (!id || !name) {
-    console.log("Update failed: ID or Name is missing");
-    return;
-  }
+  if (!id || !name) return;
 
   try {
     const dataToUpdate: any = { name, websiteUrl, affiliateLink };
@@ -81,11 +69,9 @@ export async function updateBroker(formData: FormData): Promise<void> {
     const logoUrl = await handleFileUpload(file);
     if (logoUrl) {
       dataToUpdate.logoUrl = logoUrl;
-      console.log("New logo will be saved to DB:", logoUrl);
     }
 
     await prisma.broker.update({ where: { id }, data: dataToUpdate });
-    console.log("Broker updated in DB successfully!");
   } catch (error) {
     console.error("Update broker error:", error);
     return;
