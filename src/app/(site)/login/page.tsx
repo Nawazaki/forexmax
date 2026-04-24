@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Lock, Mail, Eye, EyeOff, Sparkles, Chrome, Github, ArrowRight } from "lucide-react";
+import { Lock, Mail, Eye, EyeOff, Sparkles, Globe, Code, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
