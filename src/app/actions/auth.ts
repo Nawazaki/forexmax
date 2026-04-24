@@ -46,4 +46,3 @@ export async function registerUser(formData: FormData) {
     return { error: "Something went wrong during registration." };
   }
 }
- git add . && git commit -m "Rebuild brokers with precise schema, security, and Blob" && git push
