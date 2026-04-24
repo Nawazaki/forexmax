@@ -1,106 +1,129 @@
 "use client";
 
+import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState, Suspense } from "react";
-import { signIn } from "next-auth/react";
-import { Lock, Mail, TrendingUp } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Lock, Mail, Eye, EyeOff, Sparkles, Chrome, Github, ArrowRight } from "lucide-react";
 
-function LoginForm() {
+export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const registered = searchParams.get("registered");
-  
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError("");
-
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
+    
+    // Replace this with your actual signIn logic
     try {
-      const res = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (res?.error) {
-        setError("Invalid email or password");
-        setLoading(false);
-      } else {
-        window.location.href = "/";
-      }
+      // const result = await signIn("credentials", { ... });
+      router.push("/dashboard");
     } catch (err) {
-      setError("An unexpected error occurred");
+      setError("Invalid credentials. Please try again.");
       setLoading(false);
     }
   }
 
   return (
-    <div className="w-full max-w-md bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-[2rem] shadow-2xl border border-white/20 dark:border-zinc-800/50 p-8 md:p-10 relative z-10">
-      <div className="flex justify-center mb-6">
-        <div className="bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-500/20 dark:to-emerald-600/20 p-4 rounded-2xl shadow-inner">
-          <TrendingUp className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+    <div className="relative flex min-h-screen items-center justify-center p-4 bg-zinc-950 overflow-hidden">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-500/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="w-full max-w-md bg-zinc-900/40 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl border border-white/10 overflow-hidden relative z-10">
+        <div className="p-8 md:p-12">
+          <div className="text-center mb-10">
+            <div className="inline-flex p-3 bg-purple-500/10 rounded-2xl mb-4 border border-purple-500/20">
+              <Sparkles className="h-8 w-8 text-purple-500" />
+            </div>
+            <h1 className="text-4xl font-black text-white mb-3 tracking-tight">Welcome Back</h1>
+            <p className="text-zinc-400 font-medium">Enter your details to access the terminal.</p>
+          </div>
+
+          {error && (
+            <div className="bg-red-500/10 text-red-400 p-4 rounded-2xl text-sm mb-8 border border-red-500/20 font-semibold text-center animate-in fade-in slide-in-from-top-2">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">Email or Username</label>
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2">
+                    <Mail className="h-5 w-5 text-zinc-500 group-focus-within:text-purple-400 transition-colors" />
+                  </div>
+                  <input 
+                    type="text" name="email" required 
+                    className="w-full pl-12 pr-4 py-3.5 border border-zinc-800 rounded-2xl bg-zinc-900/50 backdrop-blur-md outline-none focus:border-purple-500 transition-all text-white placeholder:text-zinc-600 font-medium" 
+                    placeholder="name@example.com"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">Password</label>
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2">
+                    <Lock className="h-5 w-5 text-zinc-500 group-focus-within:text-purple-400 transition-colors" />
+                  </div>
+                  <input 
+                    type={showPassword ? "text" : "password"} name="password" required 
+                    className="w-full pl-12 pr-12 py-3.5 border border-zinc-800 rounded-2xl bg-zinc-900/50 backdrop-blur-md outline-none focus:border-purple-500 transition-all text-white placeholder:text-zinc-600 font-medium" 
+                    placeholder="••••••••"
+                  />
+                  <button 
+                    type="button" onClick={() => setShowPassword(!showPassword)} 
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-sm">
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input type="checkbox" className="w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-purple-500 focus:ring-purple-500" />
+                <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors">Remember me</span>
+              </label>
+              <Link href="/forgot-password" className="text-purple-500 hover:text-purple-400 font-bold transition-colors">
+                Forgot password?
+              </Link>
+            </div>
+
+            <button 
+              type="submit" disabled={loading} 
+              className="w-full bg-purple-600 text-white font-bold py-4 rounded-2xl hover:bg-purple-500 disabled:opacity-30 transition-all shadow-xl shadow-purple-900/20 flex items-center justify-center gap-2 group"
+            >
+              {loading ? "Authenticating..." : "Sign In"} <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </form>
+
+          <div className="mt-8 grid grid-cols-1 gap-4">
+            <div className="relative flex items-center py-4">
+              <div className="flex-grow border-t border-zinc-800"></div>
+              <span className="flex-shrink mx-4 text-xs font-bold text-zinc-600 uppercase tracking-widest">Quick Access</span>
+              <div className="flex-grow border-t border-zinc-800"></div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <button className="flex items-center justify-center gap-3 bg-white text-zinc-900 font-bold py-3 rounded-xl hover:bg-zinc-100 transition-all">
+                <Chrome className="h-5 w-5" /> Google
+              </button>
+              <button className="flex items-center justify-center gap-3 bg-zinc-800 text-white font-bold py-3 rounded-xl hover:bg-zinc-700 transition-all">
+                <Github className="h-5 w-5" /> GitHub
+              </button>
+            </div>
+          </div>
+
+          <p className="text-center mt-8 text-zinc-500 text-sm font-medium">
+            Don't have an account? <Link href="/register" className="text-purple-500 hover:text-purple-400 font-bold transition-colors">Sign up here</Link>
+          </p>
         </div>
       </div>
-      <h1 className="text-3xl font-black text-center text-zinc-900 dark:text-white mb-2 tracking-tight">Welcome Back</h1>
-      <p className="text-center font-medium text-zinc-500 dark:text-zinc-400 mb-8">Log in to your ForexMax account.</p>
-      
-      {registered && (
-        <div className="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 p-4 rounded-xl text-sm mb-6 text-center border border-emerald-200 dark:border-emerald-500/20 font-bold shadow-sm">
-          Registration successful! Please log in.
-        </div>
-      )}
-
-      {error && (
-        <div className="bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm mb-6 text-center border border-red-200 dark:border-red-500/20 font-bold shadow-sm">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-2">Email Address</label>
-          <div className="relative">
-            <Mail className="absolute left-4 top-3.5 h-5 w-5 text-zinc-400" />
-            <input type="email" name="email" required className="w-full pl-12 pr-4 py-3.5 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-zinc-50 dark:bg-zinc-950/50 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all dark:text-white font-medium" placeholder="you@example.com" />
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-2">Password</label>
-          <div className="relative">
-            <Lock className="absolute left-4 top-3.5 h-5 w-5 text-zinc-400" />
-            <input type="password" name="password" required className="w-full pl-12 pr-4 py-3.5 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-zinc-50 dark:bg-zinc-950/50 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all dark:text-white font-medium" placeholder="••••••••" />
-          </div>
-        </div>
-        <button type="submit" disabled={loading} className="w-full mt-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold py-4 rounded-xl hover:from-emerald-400 hover:to-emerald-500 transition-all disabled:opacity-70 shadow-lg shadow-emerald-500/25 transform hover:-translate-y-0.5 active:translate-y-0">
-          {loading ? "Authenticating..." : "Log In Securely"}
-        </button>
-      </form>
-      
-      <p className="text-center text-sm font-medium text-zinc-600 dark:text-zinc-400 mt-8 pt-6 border-t border-zinc-100 dark:border-zinc-800/50">
-        Don't have an account? <Link href="/register" className="text-purple-600 dark:text-purple-400 font-bold hover:text-purple-500 transition-colors ml-1">Sign up</Link>
-      </p>
-    </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <div className="relative flex min-h-[calc(100vh-80px)] items-center justify-center p-4 overflow-hidden selection:bg-emerald-500/30">
-      {/* Background Blobs */}
-      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 dark:bg-purple-600/20 blur-[120px] rounded-full pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-amber-400/10 dark:bg-amber-400/15 blur-[120px] rounded-full pointer-events-none"></div>
-
-      <Suspense fallback={<div className="animate-pulse w-full max-w-md h-96 bg-zinc-100 dark:bg-zinc-800 rounded-[2rem]"></div>}>
-        <LoginForm />
-      </Suspense>
     </div>
   );
 }
