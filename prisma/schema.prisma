@@ -87,3 +87,10 @@ model Subscriber {
   email     String   @unique
   createdAt DateTime @default(now())
 }
+model Settings {
+  id              String   @id @default(uuid())
+  riskDisclaimer  String   @db.Text
+  telegramChannel String   @default("https://t.me/forexm_ax")
+  telegramSupport String   @default("@Nanobotai")
+  updatedAt        DateTime @updatedAt
+}

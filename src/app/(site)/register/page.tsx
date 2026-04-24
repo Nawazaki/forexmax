@@ -10,6 +10,9 @@ export default function RegisterPage() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  // 1. الإضافة الجديدة: حالة مراقبة مربع إخلاء المسؤولية
+  const [isDisclaimerAccepted, setIsDisclaimerAccepted] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -88,16 +91,30 @@ export default function RegisterPage() {
               </div>
             </div>
 
+            {/* 2. الإضافة الجديدة: مربع إخلاء المسؤولية المربوط بالـ State */}
             <div className="flex items-start mt-6">
               <div className="flex items-center h-5">
-                <input id="terms" name="terms" type="checkbox" required className="w-5 h-5 border border-zinc-300 rounded-md bg-white focus:ring-3 focus:ring-emerald-500/20 text-emerald-600 dark:bg-zinc-800 dark:border-zinc-700 transition-all cursor-pointer" />
+                <input 
+                  id="disclaimer" 
+                  name="disclaimer" 
+                  type="checkbox" 
+                  required 
+                  checked={isDisclaimerAccepted}
+                  onChange={(e) => setIsDisclaimerAccepted(e.target.checked)}
+                  className="w-5 h-5 border border-zinc-300 rounded-md bg-white focus:ring-3 focus:ring-emerald-500/20 text-emerald-600 dark:bg-zinc-800 dark:border-zinc-700 transition-all cursor-pointer" 
+                />
               </div>
-              <label htmlFor="terms" className="ml-3 text-sm font-medium text-zinc-600 dark:text-zinc-400 cursor-pointer">
-                I agree to the <a href="#" className="text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 font-bold transition-colors">Terms</a> and <a href="#" className="text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 font-bold transition-colors">Privacy Policy</a>.
+              <label htmlFor="disclaimer" className="ml-3 text-sm font-medium text-zinc-600 dark:text-zinc-400 cursor-pointer">
+                I have read and agree to the <Link href="/disclaimer" className="text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 font-bold transition-colors underline underline-offset-2">Risk Disclaimer</Link>.
               </label>
             </div>
 
-            <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold py-4 rounded-xl hover:from-emerald-400 hover:to-emerald-500 transition-all disabled:opacity-70 shadow-lg shadow-emerald-500/25 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
+            {/* 3. التعديل الجديد: ربط الزر بتعطيل عند عدم الموافقة */}
+            <button 
+              type="submit" 
+              disabled={loading || !isDisclaimerAccepted} 
+              className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold py-4 rounded-xl hover:from-emerald-400 hover:to-emerald-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/25 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
+            >
               {loading ? "Creating Account..." : "Complete Registration"}
             </button>
           </form>
