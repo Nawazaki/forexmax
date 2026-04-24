@@ -103,7 +103,7 @@ export default function RegisterPage() {
                 />
               </div>
               <label htmlFor="disclaimer" className="ml-3 text-sm font-medium text-zinc-600 dark:text-zinc-400 cursor-pointer">
-                I have read and agree to the <Link href="/disclaimer" className="text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 font-bold transition-colors underline underline-offset-2">Risk Disclaimer</Link>.
+                I agree to the Risk Disclaimer.
               </label>
             </div>
 
