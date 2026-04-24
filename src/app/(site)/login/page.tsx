@@ -111,10 +111,10 @@ export default function LoginPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <button className="flex items-center justify-center gap-3 bg-white text-zinc-900 font-bold py-3 rounded-xl hover:bg-zinc-100 transition-all">
-                <Chrome className="h-5 w-5" /> Google
+                <global className="h-5 w-5" /> Google
               </button>
               <button className="flex items-center justify-center gap-3 bg-zinc-800 text-white font-bold py-3 rounded-xl hover:bg-zinc-700 transition-all">
-                <Github className="h-5 w-5" /> GitHub
+                <Code className="h-5 w-5" /> GitHub
               </button>
             </div>
           </div>
