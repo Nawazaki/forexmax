@@ -8,7 +8,9 @@ export async function registerUser(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
-  const terms = formData.get("terms") as string;
+  
+  // FIX: Changed "terms" to "disclaimer" to match the form input name
+  const disclaimer = formData.get("disclaimer") as string;
 
   if (!fullName || !email || !password || !confirmPassword) {
     return { error: "All fields are required." };
@@ -22,8 +24,9 @@ export async function registerUser(formData: FormData) {
     return { error: "Password must be at least 6 characters long." };
   }
 
-  if (terms !== "on") {
-    return { error: "You must agree to the Terms and Conditions." };
+  // Check if the disclaimer value is exactly "on"
+  if (disclaimer !== "on") {
+    return { error: "You must agree to the Risk Disclaimer to continue." };
   }
 
   try {
@@ -46,3 +49,4 @@ export async function registerUser(formData: FormData) {
     return { error: "Something went wrong during registration." };
   }
 }
+ 

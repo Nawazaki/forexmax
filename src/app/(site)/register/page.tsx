@@ -11,7 +11,7 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   
-  // 1. الإضافة الجديدة: حالة مراقبة مربع إخلاء المسؤولية
+  // State to control the checkbox and the submit button
   const [isDisclaimerAccepted, setIsDisclaimerAccepted] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -91,14 +91,12 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* 2. الإضافة الجديدة: مربع إخلاء المسؤولية المربوط بالـ State */}
             <div className="flex items-start mt-6">
               <div className="flex items-center h-5">
+                {/* Visual Checkbox: handles the state but doesn't rely on 'name' for submission */}
                 <input 
                   id="disclaimer" 
-                  name="disclaimer" 
                   type="checkbox" 
-                  required 
                   checked={isDisclaimerAccepted}
                   onChange={(e) => setIsDisclaimerAccepted(e.target.checked)}
                   className="w-5 h-5 border border-zinc-300 rounded-md bg-white focus:ring-3 focus:ring-emerald-500/20 text-emerald-600 dark:bg-zinc-800 dark:border-zinc-700 transition-all cursor-pointer" 
@@ -109,7 +107,9 @@ export default function RegisterPage() {
               </label>
             </div>
 
-            {/* 3. التعديل الجديد: ربط الزر بتعطيل عند عدم الموافقة */}
+            {/* Hidden Input Trick: ensures the exact state is sent in FormData as "on" or "off" */}
+            <input type="hidden" name="disclaimer" value={isDisclaimerAccepted ? "on" : "off"} />
+
             <button 
               type="submit" 
               disabled={loading || !isDisclaimerAccepted} 
