@@ -4,13 +4,17 @@ import prisma from "../../lib/prisma";
 import bcrypt from "bcryptjs";
 
 export async function registerUser(formData: FormData) {
-  const fullName = formData.get("fullName") as string;
+  // Extract all fields from the new advanced frontend
+  const firstName = formData.get("firstName") as string;
+  const lastName = formData.get("lastName") as string;
+  const username = formData.get("username") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
 
   // 1. Basic Field Validation
-  if (!fullName || !email || !password || !confirmPassword) {
+  // We check all required fields. Username is unique and required by our new UI.
+  if (!firstName || !lastName || !username || !email || !password || !confirmPassword) {
     return { error: "All fields are required." };
   }
 
@@ -26,15 +30,22 @@ export async function registerUser(formData: FormData) {
 
   try {
     // 4. Unique Email Check
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) return { error: "Email already exists. Please login." };
+    const existingEmail = await prisma.user.findUnique({ where: { email } });
+    if (existingEmail) return { error: "Email already exists. Please login." };
 
-    // 5. Hashing and Storage
+    // 5. Unique Username Check
+    const existingUsername = await prisma.user.findUnique({ where: { username } });
+    if (existingUsername) return { error: "Username is already taken. Please choose another." };
+
+    // 6. Hashing and Storage
     const hashedPassword = await bcrypt.hash(password, 10);
     
     await prisma.user.create({
       data: { 
         email, 
+        username,
+        firstName,
+        lastName,
         password: hashedPassword, 
         role: "USER" 
       }

@@ -16,6 +16,9 @@ enum Role {
 model User {
   id           String       @id @default(uuid())
   email        String       @unique
+  username     String?      @unique
+  firstName    String?
+  lastName     String?
   password     String
   role         Role         @default(USER)
   createdAt    DateTime     @default(now())
@@ -79,7 +82,7 @@ model ForumReply {
   authorId  String
   author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  updatedAt DateTime     @updatedAt
 }
 
 model Subscriber {
@@ -87,6 +90,7 @@ model Subscriber {
   email     String   @unique
   createdAt DateTime @default(now())
 }
+
 model Settings {
   id              String   @id @default(uuid())
   riskDisclaimer  String   @db.Text
