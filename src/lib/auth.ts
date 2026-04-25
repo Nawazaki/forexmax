@@ -24,6 +24,11 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid email or password");
         }
 
+        // 🛑 قفل الأمان الجديد: منع الدخول إذا لم يتم التحقق من الإيميل 🛑
+        if (!user.emailVerified) {
+          throw new Error("Please verify your email address before logging in.");
+        }
+
         const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
 
         if (!isPasswordValid) {

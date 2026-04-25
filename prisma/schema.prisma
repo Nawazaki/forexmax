@@ -13,20 +13,24 @@ enum Role {
   ADMIN
 }
 
+// ... existing models ...
+
 model User {
-  id           String       @id @default(uuid())
-  email        String       @unique
-  username     String?      @unique
-  firstName    String?
-  lastName     String?
-  password     String
-  role         Role         @default(USER)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  strategies   Strategy[]
-  articles     Article[]
-  forumTopics  ForumTopic[]
-  forumReplies ForumReply[]
+  id              String    @id @default(uuid())
+  email           String    @unique
+  username        String?   @unique
+  firstName       String?
+  lastName        String?
+  password        String
+  role            Role      @default(USER)
+  emailVerified   DateTime? 
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  strategies      Strategy[]
+  articles        Article[]
+  topics          ForumTopic[]
+  replies         ForumReply[]
 }
 
 model Broker {
