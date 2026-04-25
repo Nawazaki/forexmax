@@ -1,51 +1,77 @@
-import { getBrokers } from "@/app/actions/brokers";
-import { ExternalLink } from "lucide-react";
+import { createBroker } from "../../../actions/brokers";
 
-export default async function PublicBrokersPage() {
-  const brokers = await getBrokers();
-
+export default function NewBrokerPage() {
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-extrabold text-slate-900 mb-4">Top Recommended Forex Brokers</h1>
-        <p className="text-slate-600 max-w-2xl mx-auto">
-          Discover the best trading platforms based on reliability, spreads, and user experience.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {brokers.map((broker) => (
-          <div key={broker.id} className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg transition-shadow flex flex-col h-full">
-            <div className="flex items-center gap-4 mb-6">
-              <img 
-                src={broker.logoUrl || "/placeholder-broker.png"} 
-                alt={broker.name} 
-                className="w-16 h-16 rounded-xl object-cover border border-slate-100" 
-              />
-              <h3 className="text-xl font-bold text-slate-900">{broker.name}</h3>
-            </div>
-            
-            <div className="flex-grow mb-6">
-              <p className="text-slate-500 text-sm mb-2">Official Website:</p>
-              <p className="text-slate-700 text-sm truncate">{broker.websiteUrl}</p>
-            </div>
-            
-            <a 
-              href={broker.affiliateLink} 
-              target="_blank" 
-              className="flex items-center justify-center gap-2 bg-slate-900 text-white py-3 rounded-xl font-medium hover:bg-slate-800 transition-colors"
-            >
-              Open Account <ExternalLink size={16} />
-            </a>
-          </div>
-        ))}
-      </div>
-
-      {brokers.length === 0 && (
-        <div className="text-center py-20 text-slate-500">
-          No brokers listed yet. Please check back later.
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Create Broker</h1>
+      
+      <form 
+        action={createBroker} 
+        className="space-y-6 bg-white dark:bg-zinc-900 p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm"
+      >
+        {/* Broker Name */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+            Broker Name
+          </label>
+          <input 
+            type="text" 
+            name="name" 
+            required 
+            className="w-full p-2 border rounded-md dark:bg-zinc-950 dark:border-zinc-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
+            placeholder="e.g. IC Markets"
+          />
         </div>
-      )}
+
+        {/* Website URL */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+            Website URL
+          </label>
+          <input 
+            type="url" 
+            name="websiteUrl" 
+            required 
+            className="w-full p-2 border rounded-md dark:bg-zinc-950 dark:border-zinc-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
+            placeholder="https://example.com"
+          />
+        </div>
+
+        {/* Affiliate Link */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+            Affiliate Link
+          </label>
+          <input 
+            type="url" 
+            name="affiliateLink" 
+            required 
+            className="w-full p-2 border rounded-md dark:bg-zinc-950 dark:border-zinc-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
+            placeholder="https://example.com/ref=123"
+          />
+        </div>
+
+        {/* Logo Image - Syncing logic with Articles Page */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+            Logo Image
+          </label>
+          <input 
+            type="file" 
+            name="logo" 
+            accept="image/*" 
+            required
+            className="w-full p-2 border rounded-md dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all" 
+          />
+        </div>
+
+        <button 
+          type="submit" 
+          className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition-all active:scale-[0.98]"
+        >
+          Save Broker
+        </button>
+      </form>
     </div>
   );
 }
