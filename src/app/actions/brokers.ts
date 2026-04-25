@@ -7,11 +7,13 @@ import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+// دالة الرفع المعدلة لتتطابق مع قوة ملف المقالات
 async function handleFileUpload(file: File | null): Promise<string | null> {
   try {
     if (!file || file.size === 0) return null;
-    const blob = await put(file.name, file, {
+    const blob = await put(`brokers/${file.name}`, file, {
       access: "public",
+      addRandomSuffix: true, // هذه هي الكلمة السحرية التي كانت مفقودة!
     });
     return blob.url;
   } catch (error) {
