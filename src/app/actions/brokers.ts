@@ -7,13 +7,13 @@ import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-// دالة الرفع المعدلة لتتطابق مع قوة ملف المقالات
+// Optimized file upload logic matching the Articles module
 async function handleFileUpload(file: File | null): Promise<string | null> {
   try {
     if (!file || file.size === 0) return null;
     const blob = await put(`brokers/${file.name}`, file, {
       access: "public",
-      addRandomSuffix: true, // هذه هي الكلمة السحرية التي كانت مفقودة!
+      addRandomSuffix: true, 
     });
     return blob.url;
   } catch (error) {
@@ -31,6 +31,8 @@ export async function createBroker(formData: FormData): Promise<void> {
   const name = formData.get("name") as string;
   const websiteUrl = formData.get("websiteUrl") as string;
   const affiliateLink = formData.get("affiliateLink") as string;
+  const rating = formData.get("rating") as string;
+  const description = formData.get("description") as string;
   const file = formData.get("logo") as File | null;
 
   if (!name || !websiteUrl || !affiliateLink) {
@@ -45,15 +47,15 @@ export async function createBroker(formData: FormData): Promise<void> {
         name,
         websiteUrl,
         affiliateLink,
+        rating,
+        description,
         logoUrl,
       },
     });
   } catch (error) {
     console.error("Create broker error:", error);
     return;
-rating: "5.0/5",
-        description: "A premium broker strictly vetted by the ForexMax team."  }
-
+  }
 
   revalidatePath("/admin/brokers");
   revalidatePath("/brokers");
@@ -71,6 +73,8 @@ export async function updateBroker(formData: FormData): Promise<void> {
   const name = formData.get("name") as string;
   const websiteUrl = formData.get("websiteUrl") as string;
   const affiliateLink = formData.get("affiliateLink") as string;
+  const rating = formData.get("rating") as string;
+  const description = formData.get("description") as string;
   const file = formData.get("logo") as File | null;
 
   if (!id || !name || !websiteUrl || !affiliateLink) {
@@ -78,7 +82,13 @@ export async function updateBroker(formData: FormData): Promise<void> {
   }
 
   try {
-    const dataToUpdate: any = { name, websiteUrl, affiliateLink };
+    const dataToUpdate: any = { 
+      name, 
+      websiteUrl, 
+      affiliateLink, 
+      rating, 
+      description 
+    };
 
     const logoUrl = await handleFileUpload(file);
     if (logoUrl) dataToUpdate.logoUrl = logoUrl;
