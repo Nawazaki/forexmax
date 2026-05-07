@@ -57,6 +57,8 @@ model Broker {
   id              String   @id @default(uuid())
   name            String
   logoUrl         String?
+  websiteUrl      String  
+  description     String  
   regulationType  String
   expectedSpread  String
   minDeposit      String

@@ -1,5 +1,4 @@
 "use server";
-
 import prisma from "../../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
@@ -7,7 +6,6 @@ import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-// Cloud upload handler mirroring the articles logic
 async function handleFileUpload(file: File | null): Promise<string | null> {
   try {
     if (!file || file.size === 0) return null;
@@ -32,30 +30,22 @@ export async function createBroker(formData: FormData): Promise<void> {
   const minDeposit = formData.get("minDeposit") as string;
   const ibLink = formData.get("ibLink") as string;
   const rating = formData.get("rating") as string;
+  const websiteUrl = formData.get("websiteUrl") as string;
+  const description = formData.get("description") as string;
   const file = formData.get("logo") as File | null;
 
-  // Mandatory fields check
-  if (!name || !regulationType || !expectedSpread || !minDeposit || !ibLink || !rating) return;
+  if (!name || !regulationType || !expectedSpread || !minDeposit || !ibLink || !rating || !websiteUrl || !description) return;
 
   try {
     const logoUrl = await handleFileUpload(file);
     
     await prisma.broker.create({
-      data: {
-        name,
-        regulationType,
-        expectedSpread,
-        minDeposit,
-        ibLink,
-        rating,
-        logoUrl,
-      },
+      data: { name, regulationType, expectedSpread, minDeposit, ibLink, rating, websiteUrl, description, logoUrl },
     });
   } catch (error) {
     console.error("Create broker error:", error);
     return;
   }
-
   revalidatePath("/admin/brokers");
   revalidatePath("/brokers");
   revalidatePath("/");
@@ -73,19 +63,14 @@ export async function updateBroker(formData: FormData): Promise<void> {
   const minDeposit = formData.get("minDeposit") as string;
   const ibLink = formData.get("ibLink") as string;
   const rating = formData.get("rating") as string;
+  const websiteUrl = formData.get("websiteUrl") as string;
+  const description = formData.get("description") as string;
   const file = formData.get("logo") as File | null;
 
-  if (!id || !name || !regulationType || !expectedSpread || !minDeposit || !ibLink || !rating) return;
+  if (!id || !name || !regulationType || !expectedSpread || !minDeposit || !ibLink || !rating || !websiteUrl || !description) return;
 
   try {
-    const dataToUpdate: any = { 
-      name, 
-      regulationType, 
-      expectedSpread, 
-      minDeposit, 
-      ibLink, 
-      rating 
-    };
+    const dataToUpdate: any = { name, regulationType, expectedSpread, minDeposit, ibLink, rating, websiteUrl, description };
     const logoUrl = await handleFileUpload(file);
     if (logoUrl) dataToUpdate.logoUrl = logoUrl;
 
@@ -97,7 +82,6 @@ export async function updateBroker(formData: FormData): Promise<void> {
     console.error("Update broker error:", error);
     return;
   }
-
   revalidatePath("/admin/brokers");
   revalidatePath("/brokers");
   revalidatePath("/");
@@ -120,4 +104,3 @@ export async function deleteBroker(formData: FormData): Promise<void> {
     console.error("Delete broker error:", error);
   }
 }
- 
